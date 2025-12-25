@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
             download
             className="hidden text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 sm:inline-flex"
           >
-            Download Resume
+            Resume
           </a>
 
           {/* CTA Button */}
