@@ -4,9 +4,6 @@ import Hero from "./Components/Hero";
 import About from "./Components/About";
 import Show from "./Components/Show";
 import Contact from "./Components/Contact";
-// import Services from "./Components/Services";
-// import Work from "./Components/Work";
-// import Contact from "./Components/Contact";
 
 const App = () => {
   return (
@@ -18,16 +15,7 @@ const App = () => {
       <Hero />
        <About />
        <Show />
-
       <Contact /> 
-      {/*
-        Future sections will go here:
-        - About
-        - Services
-        - Portfolio
-        - Testimonials
-        - Contact
-      */}
     </div>
   );
 };
