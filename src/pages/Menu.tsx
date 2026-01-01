@@ -13,6 +13,15 @@ const Menu: React.FC = () => {
     "ring-4 ring-yellow-400 bg-yellow-50";
 
   const handleToggle = (item: MenuItem) => {
+    const alreadySelected = isItemSelected(item.id);
+
+    console.log(
+      alreadySelected
+        ? "➖ Removing item from cart:"
+        : "➕ Adding item to cart:",
+      item
+    );
+
     toggleItem(item);
   };
 
@@ -93,7 +102,10 @@ const Menu: React.FC = () => {
                   return (
                     <li
                       key={item.id}
-                      onClick={() => handleToggle(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggle(item);
+                      }}
                       className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
                         selected ? "bg-white/10 px-2 rounded" : ""
                       }`}
@@ -116,7 +128,10 @@ const Menu: React.FC = () => {
                   return (
                     <li
                       key={item.id}
-                      onClick={() => handleToggle(item)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggle(item);
+                      }}
                       className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
                         selected ? "bg-white/10 px-2 rounded" : ""
                       }`}
@@ -140,7 +155,10 @@ const Menu: React.FC = () => {
                 return (
                   <li
                     key={item.id}
-                    onClick={() => handleToggle(item)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggle(item);
+                    }}
                     className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
                       selected ? "bg-white/10 px-2 rounded" : ""
                     }`}

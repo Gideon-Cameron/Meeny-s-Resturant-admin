@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 
 const CartPopup: React.FC = () => {
   const { items, total, clearCart } = useCart();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(false);
+
+  // Auto-open popup when items are added
+  useEffect(() => {
+    if (items.length > 0) {
+      console.log("🛒 Cart updated:", items);
+      console.log("💰 New total:", total);
+      setOpen(true);
+    }
+  }, [items, total]);
 
   // Do not render if cart is empty or popup closed
   if (items.length === 0 || !open) return null;
-
-  // Debug logging
-  console.log("🛒 Cart Popup Opened");
-  console.log("Items in cart:", items);
-  console.log("Total:", total);
 
   const handleClose = () => {
     console.log("❌ Cart popup closed");

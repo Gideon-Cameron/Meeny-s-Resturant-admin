@@ -3,6 +3,7 @@ import React, {
     useContext,
     useState,
     ReactNode,
+    useMemo,
   } from "react";
   import { MenuItem } from "../data/menu";
   
@@ -16,7 +17,7 @@ import React, {
     total: number;
   
     toggleItem: (item: MenuItem) => void;
-    isSelected: (id: string) => boolean;
+    isItemSelected: (id: string) => boolean;
   
     openCart: () => void;
     closeCart: () => void;
@@ -35,35 +36,39 @@ import React, {
      PROVIDER
   ====================== */
   
-  export const CartProvider = ({ children }: { children: ReactNode }) => {
+  export const CartProvider = ({
+    children,
+  }: {
+    children: ReactNode;
+  }) => {
     const [items, setItems] = useState<MenuItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
   
     /* ---------- TOGGLE ITEM ---------- */
     const toggleItem = (item: MenuItem) => {
       setItems((prev) => {
-        const exists = prev.find((i) => i.id === item.id);
+        const exists = prev.some((i) => i.id === item.id);
   
         if (exists) {
           // Unselect
           return prev.filter((i) => i.id !== item.id);
         } else {
           // Select
-          setIsOpen(true); // open cart when something is added
+          setIsOpen(true); // open cart when item added
           return [...prev, item];
         }
       });
     };
   
     /* ---------- CHECK IF SELECTED ---------- */
-    const isSelected = (id: string) => {
+    const isItemSelected = (id: string) => {
       return items.some((item) => item.id === id);
     };
   
     /* ---------- TOTAL ---------- */
-    const total = items.reduce(
-      (sum, item) => sum + item.price,
-      0
+    const total = useMemo(
+      () => items.reduce((sum, item) => sum + item.price, 0),
+      [items]
     );
   
     /* ---------- CART VISIBILITY ---------- */
@@ -83,7 +88,7 @@ import React, {
           isOpen,
           total,
           toggleItem,
-          isSelected,
+          isItemSelected,
           openCart,
           closeCart,
           clearCart,
