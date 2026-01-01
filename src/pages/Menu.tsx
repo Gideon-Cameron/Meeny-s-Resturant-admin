@@ -43,9 +43,7 @@ const Menu: React.FC = () => {
           <div className="overflow-hidden rounded-xl bg-white shadow-lg">
             <img src={box1} alt="Hot Honey Blasian Box" className="h-56 w-full object-cover" />
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                Hot Honey Blasian Box
-              </h3>
+              <h3 className="text-xl font-bold">Hot Honey Blasian Box</h3>
               <ul className="mt-4 space-y-1 text-gray-700">
                 <li>• Hot Honey Garlic Chicken Wings</li>
                 <li>• Chicken Biriyani</li>
@@ -54,9 +52,7 @@ const Menu: React.FC = () => {
                 <li>• Coleslaw</li>
                 <li>• Tropical Sun Drink</li>
               </ul>
-              <div className="mt-6 text-2xl font-extrabold text-yellow-600">
-                £15
-              </div>
+              <div className="mt-6 text-2xl font-extrabold text-yellow-600">£15</div>
             </div>
           </div>
 
@@ -64,9 +60,7 @@ const Menu: React.FC = () => {
           <div className="overflow-hidden rounded-xl bg-white shadow-lg">
             <img src={box2} alt="Blasian Box" className="h-56 w-full object-cover" />
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                Blasian Box
-              </h3>
+              <h3 className="text-xl font-bold">Blasian Box</h3>
               <ul className="mt-4 space-y-1 text-gray-700">
                 <li>• Curry Chicken</li>
                 <li>• Chicken Biriyani</li>
@@ -76,9 +70,7 @@ const Menu: React.FC = () => {
                 <li>• Coleslaw</li>
                 <li>• Guinness Punch</li>
               </ul>
-              <div className="mt-6 text-2xl font-extrabold text-yellow-600">
-                £15
-              </div>
+              <div className="mt-6 text-2xl font-extrabold text-yellow-600">£15</div>
             </div>
           </div>
 
@@ -86,9 +78,7 @@ const Menu: React.FC = () => {
           <div className="overflow-hidden rounded-xl bg-white shadow-lg">
             <img src={box3} alt="Tandoori Blasian Box" className="h-56 w-full object-cover" />
             <div className="p-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                Tandoori Blasian Box
-              </h3>
+              <h3 className="text-xl font-bold">Tandoori Blasian Box</h3>
               <ul className="mt-4 space-y-1 text-gray-700">
                 <li>• Tandoori Chicken Wings</li>
                 <li>• Lamb Biriyani</li>
@@ -96,62 +86,82 @@ const Menu: React.FC = () => {
                 <li>• Seasoned Corn on the Cob</li>
                 <li>• Coleslaw</li>
               </ul>
-              <div className="mt-6 text-2xl font-extrabold text-yellow-600">
-                £15
-              </div>
+              <div className="mt-6 text-2xl font-extrabold text-yellow-600">£15</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* ================= MENU ITEMS ================= */}
-      <section className="bg-gray-100 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-extrabold text-green-900">
+      <section className="bg-green-950 py-24 text-white">
+        <div className="mx-auto w-full max-w-4xl px-4 md:max-w-[80%] lg:max-w-5xl">
+          <h2 className="text-center text-3xl font-extrabold text-yellow-400">
             À La Carte
           </h2>
 
-          {/* MAINS */}
-          <div className="mt-10">
-            <h3 className="text-2xl font-bold text-gray-900">Mains</h3>
-            <ul className="mt-4 space-y-2 text-lg">
-              <li className="flex justify-between">
-                <span>Hot Honey Chicken Wings</span>
-                <span className="font-semibold">£10</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Tandoori Chicken Wings</span>
-                <span className="font-semibold">£10</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Curry Chicken</span>
-                <span className="font-semibold">£7</span>
-              </li>
-            </ul>
-          </div>
+          <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
+            {/* MAINS */}
+            <div>
+              <h3 className="mb-6 text-2xl font-bold text-white text-center">
+                Mains
+              </h3>
+              <ul className="space-y-3 text-lg">
+                <li className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Hot Honey Chicken Wings</span>
+                  <span>£10</span>
+                </li>
+                <li className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Tandoori Chicken Wings</span>
+                  <span>£10</span>
+                </li>
+                <li className="flex justify-between border-b border-white/20 pb-2">
+                  <span>Curry Chicken</span>
+                  <span>£7</span>
+                </li>
+              </ul>
+            </div>
 
-          {/* SIDES */}
-          <div className="mt-10">
-            <h3 className="text-2xl font-bold text-gray-900">Sides</h3>
-            <ul className="mt-4 space-y-2 text-lg">
-              <li className="flex justify-between"><span>White Rice</span><span>£3</span></li>
-              <li className="flex justify-between"><span>Chicken Biriyani</span><span>£6</span></li>
-              <li className="flex justify-between"><span>Ackee & Saltfish</span><span>£7</span></li>
-              <li className="flex justify-between"><span>Macaroni Pie</span><span>£5</span></li>
-              <li className="flex justify-between"><span>Fried Plantain</span><span>£2</span></li>
-              <li className="flex justify-between"><span>Coleslaw</span><span>£2</span></li>
-              <li className="flex justify-between"><span>Corn on the Cob</span><span>£3</span></li>
-              <li className="flex justify-between"><span>Fried Dumplings</span><span>£3</span></li>
-              <li className="flex justify-between"><span>Vegetable Spring Rolls</span><span>£3</span></li>
-            </ul>
+            {/* SIDES */}
+            <div>
+              <h3 className="mb-6 text-2xl font-bold text-white text-center">
+                Sides
+              </h3>
+              <ul className="space-y-3 text-lg">
+                {[
+                  ["White Rice", "£3"],
+                  ["Chicken Biriyani", "£6"],
+                  ["Ackee & Saltfish", "£7"],
+                  ["Macaroni Pie", "£5"],
+                  ["Fried Plantain", "£2"],
+                  ["Coleslaw", "£2"],
+                  ["Corn on the Cob", "£3"],
+                  ["Fried Dumplings", "£3"],
+                  ["Vegetable Spring Rolls", "£3"],
+                ].map(([name, price]) => (
+                  <li
+                    key={name}
+                    className="flex justify-between border-b border-white/20 pb-2"
+                  >
+                    <span>{name}</span>
+                    <span>{price}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* DRINKS */}
-          <div className="mt-10">
-            <h3 className="text-2xl font-bold text-gray-900">Drinks</h3>
-            <ul className="mt-4 space-y-2 text-lg">
-              <li className="flex justify-between"><span>Soft Drinks</span><span>£2</span></li>
-              <li className="flex justify-between"><span>Water</span><span>£1</span></li>
+          <div className="mx-auto mt-20 max-w-md text-center">
+            <h3 className="mb-6 text-2xl font-bold text-white">Drinks</h3>
+            <ul className="space-y-3 text-lg">
+              <li className="flex justify-between border-b border-white/20 pb-2">
+                <span>Soft Drinks</span>
+                <span>£2</span>
+              </li>
+              <li className="flex justify-between border-b border-white/20 pb-2">
+                <span>Water</span>
+                <span>£1</span>
+              </li>
             </ul>
           </div>
         </div>
