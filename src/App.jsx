@@ -7,34 +7,37 @@ import Show from "./Components/Show";
 import Contact from "./Components/Contact";
 
 import Menu from "./pages/Menu";
+import { CartProvider } from "./context/CartContext";
 
 const App = () => {
   return (
-    <div className="min-h-screen w-full bg-white">
-      {/* Navigation */}
-      <Navbar />
+    <CartProvider>
+      <div className="min-h-screen w-full bg-white">
+        {/* Navigation */}
+        <Navbar />
 
-      <Routes>
-        {/* HOME PAGE */}
-        <Route
-          path="/"
-          element={
-            <>
-              <Hero />
-              <About />
-              <Show />
-              <Contact />
-            </>
-          }
-        />
+        <Routes>
+          {/* HOME PAGE */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <About />
+                <Show />
+                <Contact />
+              </>
+            }
+          />
 
-        {/* MENU PAGE */}
-        <Route path="/menu" element={<Menu />} />
+          {/* MENU PAGE */}
+          <Route path="/menu" element={<Menu />} />
 
-        {/* HELP PAGE (later) */}
-        {/* <Route path="/help" element={<Help />} /> */}
-      </Routes>
-    </div>
+          {/* HELP PAGE (later) */}
+          {/* <Route path="/help" element={<Help />} /> */}
+        </Routes>
+      </div>
+    </CartProvider>
   );
 };
 
