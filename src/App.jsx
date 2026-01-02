@@ -6,6 +6,7 @@ import About from "./Components/About";
 import Show from "./Components/Show";
 import Contact from "./Components/Contact";
 import CartPopup from "./Components/CartPopup";
+import CartBar from "./Components/CartBar";
 
 import Menu from "./pages/Menu";
 
@@ -16,7 +17,7 @@ const App = () => {
   return (
     <CartProvider>
       <OrderProvider>
-        <div className="min-h-screen w-full bg-white">
+        <div className="min-h-screen w-full bg-white pb-20">
           {/* Navigation */}
           <Navbar />
 
@@ -41,7 +42,8 @@ const App = () => {
             {/* <Route path="/help" element={<Help />} /> */}
           </Routes>
 
-          {/* GLOBAL CART POPUP */}
+          {/* GLOBAL CART UI */}
+          <CartBar />
           <CartPopup />
         </div>
       </OrderProvider>

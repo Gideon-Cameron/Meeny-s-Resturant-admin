@@ -5,25 +5,24 @@ import { boxes, mains, sides, drinks, MenuItem } from "../data/menu";
 import menuHero from "../assets/menu.jpg";
 
 const Menu: React.FC = () => {
-  const { toggleItem, isItemSelected } = useCart();
+  const { addItem, isItemSelected, getItemCount } = useCart();
 
   const cardBase =
-    "cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all";
+    "relative cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all";
   const selectedStyle =
     "ring-4 ring-yellow-400 bg-yellow-50";
 
-  const handleToggle = (item: MenuItem) => {
-    const alreadySelected = isItemSelected(item.id);
-
-    console.log(
-      alreadySelected
-        ? "➖ Removing item from cart:"
-        : "➕ Adding item to cart:",
-      item
-    );
-
-    toggleItem(item);
+  const handleAdd = (item: MenuItem) => {
+    console.log("➕ Adding item to cart:", item);
+    addItem(item);
   };
+
+  const QuantityBadge = ({ count }: { count: number }) =>
+    count > 0 ? (
+      <div className="absolute top-3 right-3 rounded-full bg-green-600 px-3 py-1 text-sm font-bold text-white">
+        {count}
+      </div>
+    ) : null;
 
   return (
     <main className="bg-neutral-50 text-gray-900">
@@ -50,13 +49,16 @@ const Menu: React.FC = () => {
         <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
           {boxes.map((box) => {
             const selected = isItemSelected(box.id);
+            const count = getItemCount(box.id);
 
             return (
               <div
                 key={box.id}
-                onClick={() => handleToggle(box)}
+                onClick={() => handleAdd(box)}
                 className={`${cardBase} ${selected ? selectedStyle : ""}`}
               >
+                <QuantityBadge count={count} />
+
                 {box.image && (
                   <img
                     src={box.image}
@@ -97,20 +99,22 @@ const Menu: React.FC = () => {
               <h3 className="mb-6 text-2xl font-bold text-center">Mains</h3>
               <ul className="space-y-3 text-lg">
                 {mains.map((item) => {
-                  const selected = isItemSelected(item.id);
+                  const count = getItemCount(item.id);
 
                   return (
                     <li
                       key={item.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggle(item);
-                      }}
-                      className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
-                        selected ? "bg-white/10 px-2 rounded" : ""
-                      }`}
+                      onClick={() => handleAdd(item)}
+                      className="flex cursor-pointer justify-between border-b border-white/20 pb-2 transition hover:bg-white/10 px-2 rounded"
                     >
-                      <span>{item.name}</span>
+                      <span>
+                        {item.name}
+                        {count > 0 && (
+                          <span className="ml-2 text-sm text-yellow-400">
+                            × {count}
+                          </span>
+                        )}
+                      </span>
                       <span>£{item.price}</span>
                     </li>
                   );
@@ -123,20 +127,22 @@ const Menu: React.FC = () => {
               <h3 className="mb-6 text-2xl font-bold text-center">Sides</h3>
               <ul className="space-y-3 text-lg">
                 {sides.map((item) => {
-                  const selected = isItemSelected(item.id);
+                  const count = getItemCount(item.id);
 
                   return (
                     <li
                       key={item.id}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggle(item);
-                      }}
-                      className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
-                        selected ? "bg-white/10 px-2 rounded" : ""
-                      }`}
+                      onClick={() => handleAdd(item)}
+                      className="flex cursor-pointer justify-between border-b border-white/20 pb-2 transition hover:bg-white/10 px-2 rounded"
                     >
-                      <span>{item.name}</span>
+                      <span>
+                        {item.name}
+                        {count > 0 && (
+                          <span className="ml-2 text-sm text-yellow-400">
+                            × {count}
+                          </span>
+                        )}
+                      </span>
                       <span>£{item.price}</span>
                     </li>
                   );
@@ -150,20 +156,22 @@ const Menu: React.FC = () => {
             <h3 className="mb-6 text-2xl font-bold">Drinks</h3>
             <ul className="space-y-3 text-lg">
               {drinks.map((item) => {
-                const selected = isItemSelected(item.id);
+                const count = getItemCount(item.id);
 
                 return (
                   <li
                     key={item.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleToggle(item);
-                    }}
-                    className={`flex cursor-pointer justify-between border-b border-white/20 pb-2 transition ${
-                      selected ? "bg-white/10 px-2 rounded" : ""
-                    }`}
+                    onClick={() => handleAdd(item)}
+                    className="flex cursor-pointer justify-between border-b border-white/20 pb-2 transition hover:bg-white/10 px-2 rounded"
                   >
-                    <span>{item.name}</span>
+                    <span>
+                      {item.name}
+                      {count > 0 && (
+                        <span className="ml-2 text-sm text-yellow-400">
+                          × {count}
+                        </span>
+                      )}
+                    </span>
                     <span>£{item.price}</span>
                   </li>
                 );
