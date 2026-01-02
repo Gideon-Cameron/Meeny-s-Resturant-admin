@@ -1,10 +1,17 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { MenuItem } from "../data/menu";
 
 const DELIVERY_FEE = 5;
 
 const CartPopup: React.FC = () => {
+  const location = useLocation();
+
+  // Read default order type from navigation
+  const defaultOrderType: "pickup" | "delivery" =
+    location.state?.orderType ?? "delivery";
+
   const {
     items,
     total,
@@ -17,7 +24,9 @@ const CartPopup: React.FC = () => {
   /* ======================
      LOCAL ORDER STATE
   ====================== */
-  const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
+  const [orderType, setOrderType] =
+    useState<"pickup" | "delivery">(defaultOrderType);
+
   const [address, setAddress] = useState("");
 
   // Do not render if popup is closed or cart empty
