@@ -16,12 +16,15 @@ import React, {
     isOpen: boolean;
     total: number;
   
-    toggleItem: (item: MenuItem) => void;
+    addItem: (item: MenuItem) => void;
+    removeItem: (id: string) => void;
+    clearCart: () => void;
+  
     isItemSelected: (id: string) => boolean;
+    getItemCount: (id: string) => number;
   
     openCart: () => void;
     closeCart: () => void;
-    clearCart: () => void;
   }
   
   /* ======================
@@ -44,26 +47,33 @@ import React, {
     const [items, setItems] = useState<MenuItem[]>([]);
     const [isOpen, setIsOpen] = useState(false);
   
-    /* ---------- TOGGLE ITEM ---------- */
-    const toggleItem = (item: MenuItem) => {
+    /* ---------- ADD ITEM ---------- */
+    const addItem = (item: MenuItem) => {
+      setItems((prev) => [...prev, item]);
+  
+      console.log("➕ Added item:", item);
+    };
+  
+    /* ---------- REMOVE ONE ITEM ---------- */
+    const removeItem = (id: string) => {
       setItems((prev) => {
-        const exists = prev.some((i) => i.id === item.id);
+        const index = prev.findIndex((i) => i.id === id);
+        if (index === -1) return prev;
   
-        if (exists) {
-          // Unselect
-          return prev.filter((i) => i.id !== item.id);
-        } else {
-          // Select
-          setIsOpen(true); // open cart when item added
-          return [...prev, item];
-        }
+        const copy = [...prev];
+        copy.splice(index, 1);
+        return copy;
       });
+  
+      console.log("➖ Removed one item:", id);
     };
   
-    /* ---------- CHECK IF SELECTED ---------- */
-    const isItemSelected = (id: string) => {
-      return items.some((item) => item.id === id);
-    };
+    /* ---------- HELPERS ---------- */
+    const isItemSelected = (id: string) =>
+      items.some((item) => item.id === id);
+  
+    const getItemCount = (id: string) =>
+      items.filter((item) => item.id === id).length;
   
     /* ---------- TOTAL ---------- */
     const total = useMemo(
@@ -79,6 +89,7 @@ import React, {
     const clearCart = () => {
       setItems([]);
       setIsOpen(false);
+      console.log("🧹 Cart cleared");
     };
   
     return (
@@ -87,11 +98,13 @@ import React, {
           items,
           isOpen,
           total,
-          toggleItem,
+          addItem,
+          removeItem,
+          clearCart,
           isItemSelected,
+          getItemCount,
           openCart,
           closeCart,
-          clearCart,
         }}
       >
         {children}
