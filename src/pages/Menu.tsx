@@ -1,11 +1,21 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { boxes, mains, sides, drinks, MenuItem } from "../data/menu";
 
 import menuHero from "../assets/menu.jpg";
 
 const Menu: React.FC = () => {
+  const location = useLocation();
+
+  // Read order type from navigation state
+  const orderType: "delivery" | "pickup" =
+    location.state?.orderType ?? "delivery";
+
   const { addItem, isItemSelected, getItemCount } = useCart();
+
+  // 🔍 TEMP: verify flow
+  console.log("🧭 Order type:", orderType);
 
   const cardBase =
     "relative cursor-pointer overflow-hidden rounded-xl bg-white shadow-lg transition-all";
@@ -32,7 +42,9 @@ const Menu: React.FC = () => {
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div className="max-w-3xl text-white">
-            <h1 className="text-4xl font-extrabold sm:text-5xl">Our Menu</h1>
+            <h1 className="text-4xl font-extrabold sm:text-5xl">
+              Our Menu
+            </h1>
             <p className="mt-4 text-lg text-gray-200">
               A bold fusion of Jamaican soul and Bangladeshi spice.
             </p>
@@ -96,7 +108,9 @@ const Menu: React.FC = () => {
           <div className="mt-16 grid grid-cols-1 gap-16 lg:grid-cols-2">
             {/* MAINS */}
             <div>
-              <h3 className="mb-6 text-2xl font-bold text-center">Mains</h3>
+              <h3 className="mb-6 text-2xl font-bold text-center">
+                Mains
+              </h3>
               <ul className="space-y-3 text-lg">
                 {mains.map((item) => {
                   const count = getItemCount(item.id);
@@ -124,7 +138,9 @@ const Menu: React.FC = () => {
 
             {/* SIDES */}
             <div>
-              <h3 className="mb-6 text-2xl font-bold text-center">Sides</h3>
+              <h3 className="mb-6 text-2xl font-bold text-center">
+                Sides
+              </h3>
               <ul className="space-y-3 text-lg">
                 {sides.map((item) => {
                   const count = getItemCount(item.id);
