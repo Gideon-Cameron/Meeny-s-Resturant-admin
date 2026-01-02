@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { MenuItem } from "../data/menu";
@@ -8,8 +8,8 @@ const DELIVERY_FEE = 5;
 const CartPopup: React.FC = () => {
   const location = useLocation();
 
-  // Read default order type from navigation
-  const defaultOrderType: "pickup" | "delivery" =
+  // Read order type from navigation state
+  const navigatedOrderType: "pickup" | "delivery" =
     location.state?.orderType ?? "delivery";
 
   const {
@@ -25,9 +25,18 @@ const CartPopup: React.FC = () => {
      LOCAL ORDER STATE
   ====================== */
   const [orderType, setOrderType] =
-    useState<"pickup" | "delivery">(defaultOrderType);
+    useState<"pickup" | "delivery">(navigatedOrderType);
 
   const [address, setAddress] = useState("");
+
+  /**
+   * ✅ CRITICAL FIX
+   * Sync order type when user navigates
+   * (Click & Collect vs Delivery entry)
+   */
+  useEffect(() => {
+    setOrderType(navigatedOrderType);
+  }, [navigatedOrderType]);
 
   // Do not render if popup is closed or cart empty
   if (!isOpen || items.length === 0) return null;
@@ -49,9 +58,7 @@ const CartPopup: React.FC = () => {
   /* ======================
      TOTALS
   ====================== */
-  const deliveryFee =
-    orderType === "delivery" ? DELIVERY_FEE : 0;
-
+  const deliveryFee = orderType === "delivery" ? DELIVERY_FEE : 0;
   const finalTotal = total + deliveryFee;
 
   /* ======================
@@ -59,27 +66,25 @@ const CartPopup: React.FC = () => {
   ====================== */
   const handleConfirm = () => {
     const orderPayload = {
+      type: orderType,
       items: groupedItems,
       subtotal: total,
       deliveryFee,
       total: finalTotal,
-      type: orderType,
       address: orderType === "delivery" ? address : null,
     };
 
     console.log("✅ Order confirmed:", orderPayload);
 
-    // Later: send to Firebase here
+    // Later: send to Firebase
     clearCart();
     closeCart();
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center">
-      {/* BACKDROP */}
       <div className="absolute inset-0" onClick={closeCart} />
 
-      {/* POPUP */}
       <div className="relative w-full max-w-md rounded-t-2xl bg-white p-6 shadow-xl sm:rounded-2xl">
         {/* HEADER */}
         <div className="mb-4 flex items-center justify-between">
@@ -89,7 +94,6 @@ const CartPopup: React.FC = () => {
           <button
             onClick={closeCart}
             className="text-gray-500 hover:text-gray-800"
-            aria-label="Close cart"
           >
             ✕
           </button>
@@ -97,9 +101,7 @@ const CartPopup: React.FC = () => {
 
         {/* ORDER TYPE */}
         <div className="mb-6 space-y-2">
-          <div className="font-medium text-gray-800">
-            Order Type
-          </div>
+          <div className="font-medium text-gray-800">Order Type</div>
 
           <label className="flex items-center gap-2">
             <input
@@ -134,7 +136,7 @@ const CartPopup: React.FC = () => {
           {Object.values(groupedItems).map(({ item, qty }) => (
             <li
               key={item.id}
-              className="flex items-center justify-between border-b pb-2 text-gray-800"
+              className="flex justify-between border-b pb-2"
             >
               <div>
                 <div className="font-medium">{item.name}</div>
@@ -149,8 +151,7 @@ const CartPopup: React.FC = () => {
                 </span>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="text-sm text-red-500 hover:text-red-700"
-                  aria-label="Remove one item"
+                  className="text-red-500"
                 >
                   ✕
                 </button>
@@ -186,14 +187,14 @@ const CartPopup: React.FC = () => {
             disabled={
               orderType === "delivery" && address.trim() === ""
             }
-            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white disabled:opacity-50"
           >
             Confirm Order
           </button>
 
           <button
             onClick={clearCart}
-            className="w-full text-sm font-medium text-red-600 hover:underline"
+            className="w-full text-sm text-red-600"
           >
             Clear Cart
           </button>
