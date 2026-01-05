@@ -20,7 +20,7 @@ export interface OrderCardProps {
     type: string;
   }[];
   delivery: { address: string } | null;
-  onComplete?: () => void; // Optional: only passed for active orders
+  onComplete?: () => void;
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({
@@ -36,7 +36,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
   const date = createdAt.toDate().toLocaleString();
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3">
+    <div className="w-full max-w-sm rounded-xl border border-gray-200 bg-white p-4 shadow-sm space-y-3">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div className="text-sm text-gray-600">
