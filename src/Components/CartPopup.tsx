@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { MenuItem } from "../data/menu";
-import { db } from "../firebase/firebase";
+import { createOrder } from "../firebase/orders";
 
-console.log("🔥 Firestore connected:", db);
 const DELIVERY_FEE = 5;
 
 const CartPopup: React.FC = () => {
@@ -30,10 +29,10 @@ const CartPopup: React.FC = () => {
     useState<"pickup" | "delivery">(navigatedOrderType);
 
   const [address, setAddress] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   /**
    * ✅ Sync order type when user navigates
-   * (Delivery vs Click & Collect entry)
    */
   useEffect(() => {
     setOrderType(navigatedOrderType);
@@ -57,54 +56,37 @@ const CartPopup: React.FC = () => {
   }, {});
 
   /* ======================
-     STANDARDIZED ITEMS
-  ====================== */
-  const orderItems = Object.values(groupedItems).map(
-    ({ item, qty }) => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      quantity: qty,
-      lineTotal: item.price * qty,
-    })
-  );
-
-  /* ======================
      TOTALS
   ====================== */
-  const deliveryFee =
-    orderType === "delivery" ? DELIVERY_FEE : 0;
-
+  const deliveryFee = orderType === "delivery" ? DELIVERY_FEE : 0;
   const finalTotal = total + deliveryFee;
 
   /* ======================
-     CONFIRM
+     CONFIRM ORDER
   ====================== */
-  const handleConfirm = () => {
-    const orderPayload = {
-      createdAt: Date.now(),
-      status: "pending",
-      orderType,
+  const handleConfirm = async () => {
+    if (isSubmitting) return;
 
-      items: orderItems,
+    setIsSubmitting(true);
 
-      pricing: {
+    try {
+      await createOrder({
+        type: orderType,
+        items: groupedItems,
         subtotal: total,
         deliveryFee,
         total: finalTotal,
-      },
+        address: orderType === "delivery" ? address : null,
+      });
 
-      delivery: {
-        address:
-          orderType === "delivery" ? address : null,
-      },
-    };
-
-    console.log("✅ Order confirmed:", orderPayload);
-
-    // 🔜 Firebase write will go here
-    clearCart();
-    closeCart();
+      clearCart();
+      closeCart();
+    } catch (error) {
+      console.error("❌ Failed to create order:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -120,6 +102,7 @@ const CartPopup: React.FC = () => {
           <button
             onClick={closeCart}
             className="text-gray-500 hover:text-gray-800"
+            aria-label="Close cart"
           >
             ✕
           </button>
@@ -161,27 +144,26 @@ const CartPopup: React.FC = () => {
 
         {/* ITEMS */}
         <ul className="max-h-64 space-y-3 overflow-y-auto">
-          {orderItems.map((item) => (
+          {Object.values(groupedItems).map(({ item, qty }) => (
             <li
               key={item.id}
-              className="flex justify-between border-b pb-2"
+              className="flex justify-between border-b pb-2 text-gray-800"
             >
               <div>
-                <div className="font-medium">
-                  {item.name}
-                </div>
+                <div className="font-medium">{item.name}</div>
                 <div className="text-sm text-gray-500">
-                  £{item.price} × {item.quantity}
+                  £{item.price} × {qty}
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <span className="font-semibold">
-                  £{item.lineTotal}
+                  £{item.price * qty}
                 </span>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="text-red-500"
+                  className="text-red-500 hover:text-red-700"
+                  aria-label="Remove item"
                 >
                   ✕
                 </button>
@@ -215,17 +197,17 @@ const CartPopup: React.FC = () => {
           <button
             onClick={handleConfirm}
             disabled={
-              orderType === "delivery" &&
-              address.trim() === ""
+              isSubmitting ||
+              (orderType === "delivery" && address.trim() === "")
             }
-            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white disabled:opacity-50"
+            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
           >
-            Confirm Order
+            {isSubmitting ? "Placing Order…" : "Confirm Order"}
           </button>
 
           <button
             onClick={clearCart}
-            className="w-full text-sm text-red-600"
+            className="w-full text-sm font-medium text-red-600 hover:underline"
           >
             Clear Cart
           </button>
