@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getOrdersByStatus, markOrderCompleted } from "../firebase/orders";
-import OrderCard from "../Components/OrderCard";
+import OrderCard from "../Components/OrderCard"; // ⬅ make sure casing matches your file system
 
 const ActiveOrders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
@@ -27,7 +27,7 @@ const ActiveOrders: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
+    <div className="max-w-6xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold mb-4">Active Orders</h1>
 
       {loading ? (
@@ -35,7 +35,7 @@ const ActiveOrders: React.FC = () => {
       ) : orders.length === 0 ? (
         <div className="text-gray-500">No active orders.</div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-wrap gap-4 justify-center">
           {orders.map((order) => (
             <OrderCard
               key={order.id}
