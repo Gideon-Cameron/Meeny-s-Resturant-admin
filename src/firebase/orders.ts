@@ -6,7 +6,7 @@ import {
   import { db } from "./firebase";
   import { MenuItem } from "../data/menu";
   
-  /* ======================
+  /* =====================
      TYPES
   ====================== */
   
