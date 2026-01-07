@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getOrdersByStatus, markOrderCompleted } from "../firebase/orders";
-import OrderCard from "../Components/OrderCard"; // ⬅ make sure casing matches your file system
+import {
+  getOrdersByStatus,
+  markOrderCompleted,
+  deleteOldOrders, // ✅ Add this
+} from "../firebase/orders";
+import OrderCard from "../Components/OrderCard";
 
 const ActiveOrders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch active orders on mount
+  // ✅ Fetch orders and delete old ones
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
+
+      // 🧹 Delete any orders older than 48 hours
+      await deleteOldOrders();
+
       const data = await getOrdersByStatus("active");
       setOrders(data);
       setLoading(false);
@@ -18,11 +26,10 @@ const ActiveOrders: React.FC = () => {
     fetchOrders();
   }, []);
 
-  // Handle completing an order
+  // ✅ Handle marking an order as complete
   const handleComplete = async (orderId: string) => {
     await markOrderCompleted(orderId);
 
-    // Remove the order from local state
     setOrders((prev) => prev.filter((order) => order.id !== orderId));
   };
 

@@ -1,16 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { getOrdersByStatus } from "../firebase/orders";
-import OrderCard from "../Components/OrderCard"; // ⬅ Ensure casing matches your file
+import {
+  getOrdersByStatus,
+  markOrderCompleted,
+  deleteOldOrders, // 🧹 Import delete function
+} from "../firebase/orders";
+import OrderCard from "../Components/OrderCard";
 
-const ArchiveOrders: React.FC = () => {
+const ActiveOrders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch completed orders on mount
+  // 🔁 Fetch orders + delete old ones on mount
   useEffect(() => {
     const fetchOrders = async () => {
       setLoading(true);
-      const data = await getOrdersByStatus("completed");
+
+      // 🧹 Clean up any expired orders
+      await deleteOldOrders();
+
+      const data = await getOrdersByStatus("active");
       setOrders(data);
       setLoading(false);
     };
@@ -18,18 +26,30 @@ const ArchiveOrders: React.FC = () => {
     fetchOrders();
   }, []);
 
+  // ✅ Handle marking an order as complete
+  const handleComplete = async (orderId: string) => {
+    await markOrderCompleted(orderId);
+
+    // Remove from local state
+    setOrders((prev) => prev.filter((order) => order.id !== orderId));
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Completed Orders</h1>
+      <h1 className="text-2xl font-bold mb-4">Active Orders</h1>
 
       {loading ? (
         <div className="text-gray-500">Loading orders…</div>
       ) : orders.length === 0 ? (
-        <div className="text-gray-500">No completed orders.</div>
+        <div className="text-gray-500">No active orders.</div>
       ) : (
         <div className="flex flex-wrap gap-4 justify-center">
           {orders.map((order) => (
-            <OrderCard key={order.id} {...order} />
+            <OrderCard
+              key={order.id}
+              {...order}
+              onComplete={() => handleComplete(order.id)}
+            />
           ))}
         </div>
       )}
@@ -37,4 +57,4 @@ const ArchiveOrders: React.FC = () => {
   );
 };
 
-export default ArchiveOrders;
+export default ActiveOrders;

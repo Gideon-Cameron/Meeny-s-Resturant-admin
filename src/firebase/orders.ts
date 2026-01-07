@@ -7,6 +7,7 @@ import {
   where,
   orderBy,
   updateDoc,
+  deleteDoc,
   doc,
   Timestamp,
 } from "firebase/firestore";
@@ -82,7 +83,7 @@ export const createOrder = async (
     createdAt: serverTimestamp(),
     completedAt: null,
 
-    // TTL (48 hours)
+    // TTL reference (used by admin cleanup)
     expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000),
 
     source: "web",
@@ -129,4 +130,34 @@ export const markOrderCompleted = async (
     status: "completed",
     completedAt: Timestamp.now(),
   });
+};
+
+/* ======================
+   ADMIN: DELETE OLD ORDERS
+   (Runs when admin site loads)
+====================== */
+
+export const deleteOldOrders = async () => {
+  const now = Date.now();
+  const twoDaysAgo = now - 48 * 60 * 60 * 1000;
+
+  const snapshot = await getDocs(ordersRef);
+
+  const deletions: Promise<void>[] = [];
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const createdAt: Timestamp | undefined = data.createdAt;
+
+    if (!createdAt) return;
+
+    if (createdAt.toMillis() < twoDaysAgo) {
+      deletions.push(deleteDoc(doc(db, "orders", docSnap.id)));
+    }
+  });
+
+  if (deletions.length > 0) {
+    await Promise.all(deletions);
+    console.log(`🧹 Deleted ${deletions.length} old orders`);
+  }
 };
